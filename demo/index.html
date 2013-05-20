@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+
+	<head>
+
+		<title>jQuery Modal Window || Demos</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		
+		<!-- Stuff -->
+	    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	    <script type="text/javascript" src="stuff/script.js"></script>
+	    <link href="stuff/style.css" rel="stylesheet" media="all" />
+
+
+		<!-- Stuff: Code Highlighter -->
+	    <link href="stuff/code_highlighter/style.css" rel="stylesheet" media="all" />
+		<script type="text/javascript" src="stuff/code_highlighter/code_highlighter.js"></script>
+		<script type="text/javascript" src="stuff/code_highlighter/javascript.js"></script>
+		
+		<!-- jQuery Modal Window -->
+	    <script type="text/javascript" src="/lib/modal_window.js"></script>
+
+	</head>
+
+	<body>
+
+		<div class="main-container">
+			
+			<div class="box">
+				
+				<div class="review">
+					<h1>jQuery Modal Window Demo Page</h1>
+
+					<h3>Навигация:</h3>
+					<ul>
+						<li><a href="#simple_1">Простейший пример #1</a></li>
+					</ul>
+				</div> <!-- end .review -->
+
+			</div> <!-- end .box -->
+
+			<div class="box" id="simple_1">
+				
+				<div class="review">
+					<h2>Простейший пример #1</h2>
+					<p>Sample</p>
+				</div> <!-- end .review -->
+				
+				<a class="view_code" href="#">Показать/скрыть код</a>
+
+<pre><code class="javascript">
+/* ... */
+</code></pre> <!-- end pre>code -->
+
+				<script type="text/javascript">
+				$(function () {
+
+					$("#demo-button-1").on("click", function () {
+						console.log("new text");
+						return false;
+					});
+
+				});
+				</script>  <!-- end script -->
+
+				<br><a href="#" class="demo-button" id="demo-button-1">Открыть окошко</a>
+
+			</div> <!-- end .box -->
+
+		</div> <!-- end .main-container -->
+
+	</body>
+
+</html>
