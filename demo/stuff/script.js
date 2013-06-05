@@ -59,7 +59,6 @@ x.codeEval = function () {
 
 	}
 
-
 // Document ready
 $(x);
 
