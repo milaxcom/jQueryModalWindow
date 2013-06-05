@@ -4,6 +4,10 @@ x = function () {
 
 	x.codeEval();
 
+	$.ajaxSetup({
+		cache : false
+	});
+
 }
 
 

@@ -12,6 +12,9 @@
 	    <script type="text/javascript" src="stuff/script.js"></script>
 	    <link href="stuff/style.css" rel="stylesheet" media="all" />
 		
+		<!-- Парсер объектов для тестирования. Необходимо убрать после релиза. -->
+	   	<script type="text/javascript" src="stuff/obj.DOM.js"></script>
+		
 		<!-- jQuery Modal Window -->
 	    <script type="text/javascript" src="/lib/modal_window.js"></script>
 
@@ -37,16 +40,33 @@
 			<div class="box" id="simple_1">
 				
 				<div class="review">
-					<h2>Простейший пример #1</h2>
-					<p>Sample</p>
+					<h2>Открытие окна без настроек</h2>
+					<p><b>id</b> — HTML атрибут ID создаваемого модального окна;</p>
+					<p><b>callback.once</b> — callback-метод, срабатывает после создания окна в DOM. В метод параметр this, содержащий jQ-селектор элемента (окна).
+					</p>
 				</div> <!-- end .review -->
 				
 				<a class="view_code" href="#">Показать/скрыть код</a>
 <pre><code id="example_1">/** Source code */
-alert(123);
+
+$.modal_win({
+	id   : "example_window_1",
+	sepparators : {
+		top : "60px",
+		bottom : "60px"
+	},
+	callback : {
+		once  : function() {
+			this.load("/demo/stuff/lorem-ipsum.html");
+		}
+ 	}
+});
+
 </code></pre> <!-- end pre>code -->
 
-				<br><a href="#example_1" class="demo-button">Открыть окошко</a>
+				<div class="buttons">
+					<a href="#example_1" class="demo-button">Открыть</a>
+				</div>
 
 			</div> <!-- end .box -->
 
