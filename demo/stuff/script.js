@@ -18,7 +18,15 @@ x.viewCode = function () {
 }
 
 /**
- * Стартует код, содержит ряд внутренних методов
+ * Стартует код, содержит ряд внутренних методов.
+ * Требуется чтобы у кнопки на которую стартует код соответствовала
+ * a.demo-button. А так же в атрибуте href кнопки должен содержаться
+ * идентификатор тега, который содержит запускаемый код. 
+ * 
+ * @example
+ * <code id="code_1">alert("GO!");</code>
+ * <a href="#code_1" class="demo-button">Say «GO!»</a>
+ * 
  * @return void
  */
 x.codeEval = function () {
@@ -37,11 +45,11 @@ x.codeEval = function () {
 	 */
 	x.codeEval.exec = function () {
 		
-		// Получаем ID
-		var id = x.codeEval.getId($(this));
+		// Получаем селектор блока с кодом
+		var stringSelector = $(this).attr("href"); 
 
 		// Получаем строку со скриптом
-		var scriptString = $("#" + id).text();
+		var scriptString = $(stringSelector).text();
 
 		// Стартуем скрипт
 		$.globalEval(scriptString);
@@ -51,19 +59,6 @@ x.codeEval = function () {
 
 	}
 
-	/**
-	 * Получаем ID тега в котором хранится код из href кнопки. 
-	 * @return string,boolean
-	 */
-	x.codeEval.getId = function ($this) {
-		
-		// Получаем значение атрибута href
-		var href = $this.attr("href");
-
-		// Режем первый символ решетки и возвращаем результат
-		return href.substr(1);
-
-	}
 
 // Document ready
 $(x);
