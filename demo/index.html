@@ -8,15 +8,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		
 		<!-- Stuff -->
-	    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 	    <script type="text/javascript" src="stuff/script.js"></script>
 	    <link href="stuff/style.css" rel="stylesheet" media="all" />
-
-
-		<!-- Stuff: Code Highlighter -->
-	    <link href="stuff/code_highlighter/style.css" rel="stylesheet" media="all" />
-		<script type="text/javascript" src="stuff/code_highlighter/code_highlighter.js"></script>
-		<script type="text/javascript" src="stuff/code_highlighter/javascript.js"></script>
 		
 		<!-- jQuery Modal Window -->
 	    <script type="text/javascript" src="/lib/modal_window.js"></script>
@@ -48,23 +42,11 @@
 				</div> <!-- end .review -->
 				
 				<a class="view_code" href="#">Показать/скрыть код</a>
-
-<pre><code class="javascript">
-/* ... */
+<pre><code id="simple_1_code_1">
+alert(123);
 </code></pre> <!-- end pre>code -->
 
-				<script type="text/javascript">
-				$(function () {
-
-					$("#demo-button-1").on("click", function () {
-						console.log("new text");
-						return false;
-					});
-
-				});
-				</script>  <!-- end script -->
-
-				<br><a href="#" class="demo-button" id="demo-button-1">Открыть окошко</a>
+				<br><a href="#simple_1_code_1" class="demo-button" id="demo-button-1">Открыть окошко</a>
 
 			</div> <!-- end .box -->
 
