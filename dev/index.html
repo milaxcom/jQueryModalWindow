@@ -24,7 +24,7 @@
 					<h1>Примеры реализации</h1>
 
 					<p>После загрузки каждого из примеров перегружаем страницу.</p>
-					<p>Подробности про каждый из примеров в файле примера.</p>
+					<p>Подробности про каждый из примеров в комментариях в коде вызова.</p>
 
 
 <!-- Пример aLoader -->					
@@ -47,16 +47,164 @@ x.aloaderstart("/dev/stuff/ex1.html");
 <a class="view_code" href="#">Показать/скрыть код</a>
 <pre><code id="example_1">/** Source code */
 
+/*
+
+Имя надстройки сделай пожалуйста вот таким $.ModalWin(), ибо старый вариант $.modal_win() не слишком истетичный.
+
+Все стили, которые есть в файле /dev/stuff/ex1.html — это стили по-умолчанию, которые необходимо внести в релиз.
+
+Не надо только использовать хук для ие, который реализует прозрачность (filter:alpha). Т. к. прозрачность будет реализоваться через jq.
+
+Пример вызова данного окошка (с учетом упращенного вызова, о котором ты вчера говорил):
+
+$.ModalWin({
+	once : {
+		load : "/dev/stuff/ex1.html"
+	}
+});
+
+*/
+
 x.loadurl("/dev/stuff/ex1.html");
 
 </code></pre> <!-- end pre>code -->
 
 
 <div class="buttons">
-	<a href="#example_1" class="demo-button">Пример 1</a>
+	<a href="#example_1" class="demo-button">Пример 1 (дефолтные настройки)</a>
 </div>
 
 <br>
+
+<!-- Пример 2 -->
+
+<a class="view_code" href="#">Показать/скрыть код</a>
+<pre><code id="example_2">/** Source code */
+
+/*
+
+Для истетики уберем большие буквы в параметрах:
+containerCSS - это 			container : {}
+elementCSS — это 			element : {}
+shadowCSS — это будет 		shadow : {}
+
+Так же внутри вышеописанных объектов можно будет вызывать специфичные параметры, которые вычленяются скриптом и не попадают в непосредственный CSS. Пока только несколько параметров: 
+
+container["content"] — контент блока container, вставляется в блок через $.prepend()
+
+element["content"] — контент блока element, вставляется в блок через $.html()
+element["top-space"] — высота блока .modal-win-sepparator-top
+element["bottom-space"] — высота блока .modal-win-sepparator-bottom
+
+shadow["disable-any"] — boolean. true когда окно появляется — у всех остальных окон тень исчезает, false — тени на остальных окнах остаются, если они были включены. Дефолт true.
+shadow["animate-opacity"] — стартовое и конечное значение прозрачности, для анимации тени. Если оно не указано — то все происходит моментально.
+shadow["animate-show"] — время появляения тени. Дефолт 500.
+shadow["animate-hide"] — время исчезновения тени. Дефолт 500.
+
+Пример вызова:
+
+$.ModalWin({
+
+	id : "hello",
+
+	close
+
+		onshadow		: 		true, 				// ванианты: true/false
+
+		element 		: 		".close-button", 	// передаем имя селектора, который будет искаться в блоке .modal-win, если ничего не задано — не обрабатываем
+	
+	},
+
+	shadow : {
+
+		"disable-any"		: true,		
+
+		"animate-opacity"	: 0,
+		"animate-show"		: 500,
+		"animate-hide"		: 500,
+
+		"background-color" 	: "#000",
+		"opacity" 			: 0.4
+
+	},
+
+	container : {
+
+		content 	: 	"... тут например кнопка закрытия окна ..."
+
+	},
+
+	element : {
+
+		"background-color" 	: "#fff",
+
+		"top-space" 		: "50px",
+		"bottom-space" 		: "40px",
+
+		content		:	"... тут например прелодер"
+
+	},
+
+	load : {
+		
+		url 		: "/dev/stuff/ex2.html", // опц. загрузчик контента
+
+		append	: true, // Если true — то загружаемый контент будет вставлен через append, если false — то контент будет будет заменять все содержимое блоко. Дефолт false.
+
+		once		: true // Однажды загружаемый контент, если false — то при закрытии окна оно будет удаляться из DOM. Дефолт false.
+
+	},
+
+	call : {
+		
+		before		: function () {}, 		// опц. функция, которая срабатывает до вызова загрузчика
+
+		after		: function () {}, 		// функция срабатывает после загрузки контента
+
+		always		: function () {}, 		// функция срабатывает после after, но при этом каждый раз при открытии окна, даже если параметр load.once = true
+
+		close		:	function () {} 		// срабатывает до закрытия окна, в ней можно анимировать исчезновение блока element
+
+	}
+
+});
+
+*/
+
+x.loadurl("/dev/stuff/ex2.html");
+
+</code></pre> <!-- end pre>code -->
+
+
+<div class="buttons">
+	<a href="#example_2" class="demo-button">Пример 2 (исчерпывающая настройка)</a>
+</div>
+
+<br>
+
+
+<!-- Пример 3 -->
+
+<a class="view_code" href="#">Показать/скрыть код</a>
+<pre><code id="example_3">/** Source code */
+
+/*
+
+Из изменений только структура (у каждого элемента теперь есть все блоки: контейнер, своя тень, свои отступы сверху и снизу). В остальном — так же верхнее окно и верхняя тень становятся выше всех (z-index растет), остальные окна блокируются через overflow:hidden;.
+
+*/
+
+x.loadurl("/dev/stuff/ex3.html");
+
+</code></pre> <!-- end pre>code -->
+
+
+<div class="buttons">
+	<a href="#example_3" class="demo-button">Пример 3 (мульти окна)</a>
+</div>
+
+<br>
+
 
 
 
@@ -65,7 +213,7 @@ x.loadurl("/dev/stuff/ex1.html");
 
 			</div> <!-- end .box -->
 
-			<div class="box" id="simple_1">
+			<div class="box">
 				
 				<div class="review">
 					<h2>What is Lorem Ipsum?</h2>
