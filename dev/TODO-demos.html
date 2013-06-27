@@ -1,3 +1,4 @@
+<?$s=split("/",$_SERVER["SCRIPT_NAME"] );$d="dev";$f=array_pop($s);define("__URL__","http://".$_SERVER["HTTP_HOST"].mb_ereg_replace("{$d}/{$f}","",$_SERVER["SCRIPT_NAME"]));unset($s,$d,$f);?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 
@@ -7,11 +8,11 @@
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 
-<script type="text/javascript" src="/dev/stuff/aloader/aloader.js"></script>
-<link href="/dev/stuff/aloader/aloader.css" rel="stylesheet" media="all" />
+<script type="text/javascript" src="<?=__URL__;?>/dev/stuff/aloader/aloader.js"></script>
+<link href="<?=__URL__;?>/dev/stuff/aloader/aloader.css" rel="stylesheet" media="all" />
 
-<script type="text/javascript" src="/dev/stuff/script.js"></script>
-<link href="/dev/stuff/style.css" rel="stylesheet" media="all" />
+<script type="text/javascript" src="<?=__URL__;?>/dev/stuff/script.js"></script>
+<link href="<?=__URL__;?>/dev/stuff/style.css" rel="stylesheet" media="all" />
 
 </head>
 <body>
@@ -32,7 +33,7 @@
 <a class="view_code" href="#">Показать/скрыть код</a>
 <pre><code id="example_aloader">/** Source code */
 
-x.aloaderstart("/dev/stuff/ex1.html");
+x.aloaderstart("<?=__URL__;?>/dev/stuff/ex1.html");
 
 </code></pre> <!-- end pre>code -->
 
@@ -59,13 +60,13 @@ x.aloaderstart("/dev/stuff/ex1.html");
 
 $.ModalWin({
 	once : {
-		load : "/dev/stuff/ex1.html"
+		load : "<?=__URL__;?>/dev/stuff/ex1.html"
 	}
 });
 
 */
 
-x.loadurl("/dev/stuff/ex1.html");
+x.loadurl("<?=__URL__;?>/dev/stuff/ex1.html");
 
 </code></pre> <!-- end pre>code -->
 
@@ -107,7 +108,7 @@ $.ModalWin({
 
 	id : "hello",
 
-	close
+	close : {
 
 		onshadow		: 		true, 				// ванианты: true/false
 
@@ -147,7 +148,7 @@ $.ModalWin({
 
 	load : {
 		
-		url 		: "/dev/stuff/ex2.html", // опц. загрузчик контента
+		url 		: "<?=__URL__;?>/dev/stuff/ex2.html", // опц. загрузчик контента
 
 		append	: true, // Если true — то загружаемый контент будет вставлен через append, если false — то контент будет будет заменять все содержимое блоко. Дефолт false.
 
@@ -157,13 +158,13 @@ $.ModalWin({
 
 	call : {
 		
-		before		: function () {}, 		// опц. функция, которая срабатывает до вызова загрузчика
+		before	:function(){}, 	// опц. функция, которая срабатывает до вызова загрузчика
 
-		after		: function () {}, 		// функция срабатывает после загрузки контента
+		after	:function(){}, 	// функция срабатывает после загрузки контента
 
-		always		: function () {}, 		// функция срабатывает после after, но при этом каждый раз при открытии окна, даже если параметр load.once = true
+		always	:function(){}, 	// функция срабатывает после after, но при этом каждый раз при открытии окна, даже если параметр load.once = true
 
-		close		:	function () {} 		// срабатывает до закрытия окна, в ней можно анимировать исчезновение блока element
+		close	:function(){} 	// срабатывает до закрытия окна, в ней можно анимировать исчезновение блока element
 
 	}
 
@@ -171,7 +172,7 @@ $.ModalWin({
 
 */
 
-x.loadurl("/dev/stuff/ex2.html");
+x.loadurl("<?=__URL__;?>/dev/stuff/ex2.html");
 
 </code></pre> <!-- end pre>code -->
 
@@ -194,7 +195,7 @@ x.loadurl("/dev/stuff/ex2.html");
 
 */
 
-x.loadurl("/dev/stuff/ex3.html");
+x.loadurl("<?=__URL__;?>/dev/stuff/ex3.html");
 
 </code></pre> <!-- end pre>code -->
 
