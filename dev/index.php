@@ -31,6 +31,7 @@
 	width:700px;
 	background-color:#fff;
 	z-index:5;
+	min-height: 16px;
 }
 	
 .modal-win-space-top {
@@ -71,14 +72,22 @@
 <script>
 
 	$.ModalWin({
-		id	: "example-window-1",
-		html: "11111"
+		id				: "example-window-1",
+		html			: "sample html",
+		url				: "sample_html.php",
+		"top-space"		: "40px",
+		"bottom-space"	: "50px",
+		"shadow"		: {						
+			"opacity" 			: 0.3,		
+			"animate-opacity"	: 0,		
+			"animate-show"		: 500,		
+			"animate-hide"		: 500,		
+			"background" 		: "#F0F",	
+			"close"				: true
+		}
 	});
 	
-	$.ModalWin({
-		id	: "example-window-2",
-		html: "222222"
-	});
+	$.ModalWin({});
 	
 </script>
 </body>

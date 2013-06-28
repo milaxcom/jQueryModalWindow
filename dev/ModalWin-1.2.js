@@ -32,12 +32,12 @@
 				close_class	: ".close-button",		// Имя класса элемента, при клике на котором запускается закрытие.
 				close_shadow: true,					// true - закрыть окно при клике по тени (клик вне контэйнера для текста).
 				
-				ajax_url	: "sample_html.php",	// (string) - Адрес для запроса; false - не выполнять запрос;
+				ajax_url	: false,				// (string) - Адрес для запроса; false - не выполнять запрос;
 				ajax_method	: "GET",				// Метод передачи данных ALAX.
 				ajax_type	: false,				// Тип входящих данных (boolean - автоопределение).
-				ajax_data	: {},					// Данные для передачи в виде объекта или строки; false - не отсылать.
+				ajax_data	: false,				// Данные для передачи в виде объекта или строки; false - не отсылать.
 				ajax_append	: false,				// true - добавить контент; false - заменить.
-				ajax_cache	: "",					// false - браузер не будет кешировать производимый запрос.
+				ajax_cache	: false,				// false - браузер не будет кешировать производимый запрос.
 				
 				isLoad		: false,				// true - контент через AJAX загружен. (для использвания совместно с `once` )
 			},
@@ -93,15 +93,13 @@
 			"tag"		: "div",				// Название тэга
 			"class"		: "modal-win",			// Имя класса (без точки)
 			"style"		: {						// Список Стилей
-				"border": "1px solid red"
 			},
 			"attr"		: {						// Список Аттрибутов
-				
 			},
 			
 			// Верхний и нижний сепараторы array( "елемент", "класс", "стиль" )
 			"sep-top"		: [ "div", "modal-win-space-top", "height:20px;" ],
-			"sep-down"		: [ "div", "modal-win-space-bottom", "height:10px"]
+			"sep-down"		: [ "div", "modal-win-space-bottom", "height:10px;"]
 		},
 		
 		/** Контейнер для текста (карта элемента). */
@@ -109,7 +107,7 @@
 			"tag"		: "div",				// Название тэга
 			"id"		: false,				// Значение аттрибута id; false - без id;
 			"class"		: "modal-win-container",// Имя класса (без точки)
-			"html"		: "..load..",			// Контент до загрузки AJAX.
+			"html"		: "",					// Контент до загрузки AJAX.
 			"style"		: {						// Список Стилей
 			},
 			"attr"		: {						// Список Аттрибутов
@@ -323,11 +321,14 @@
 			 * Метод для клонирования объектов.
 			 * @ C	- клонируемый объект.
 			 */
-			clone			: function( C ) {
-				var i,O={},C=(typeof(C)!="object")?{}:C;
-				for( i in C )if(C.hasOwnProperty(i))O[i]=C[i];
-				if(C.hasOwnProperty("CACHE"))delete O["CACHE"];
-				return O;
+			clone			: function( O ) {
+				var i,C={},O=(typeof(O)!="object")?{}:O;
+				for( i in O ) {
+					if (i=="CACHE")continue;
+					if(O.hasOwnProperty(i))
+						C[i]=(typeof(O[i])=="object")?CORE.clone(O[i]):O[i];
+				}
+				return C;
 			},
 		/**#@-*/
 		
@@ -419,12 +420,10 @@
 		 * ЛОГИКА СОЗДАЮЩАЯ ОКНО.
 		 * @ this	- экземпляр ядра для этого окна.
 		 */
-		init			: function( data ) {
+		init			: function( ) {
 			// Ограничить уже имеющиеся элементы.
 			this["set_all_overflow"].call( this );
-			
-			
-			this.container.html = data.html;
+
 			/**#1
 			 * Создание экземпляров
 			 */
@@ -477,8 +476,13 @@
 				// Обработчик отлавливающий клик вне контэйнера для текста.
 				if ( this.settings.close_shadow == true )
 					$window/**/.on( "click", function( e ){
-						if ( $container.hasClass( e.target.className ) )
+						// Был ли клик по самому контейнеру
+						if ( $( e.target ).is( $container ) )
 							return;
+						// Является ли этот элемент потомком контейнера
+						if( $(e.target).parents().is( $container ) )
+							return;
+							
 						$window.trigger( "close" );
 					});
 					
@@ -577,7 +581,8 @@
 					// Создаем клон ядра для будущего окна.
 					ModalWin			= CORE.clone( CORE );
 					ModalWin			= ModalWin_install( map, ModalWin );
-					CORE.init.call( ModalWin, map );
+					
+					CORE.init.call( ModalWin );
 				}
 				
 			/**#2-*/
@@ -585,12 +590,169 @@
 	
 	
 	/** #############################################################
-	 * Метод для jQuery с логикой распределяющей карту по клону ядра.
+	 * Метод для jQuery с логикой распределяющей карту по ModalWin (клону ядра для этого экземпляра окна).
 	 **/
-		var ModalWin_install= function ( map, core_clone ) {
-			if( typeof map == "object" && typeof map.id == "string" )
-				core_clone.container.id	= map.id;
-			return core_clone;
+		var ModalWin_install= function ( map, ModalWin ) {
+			if( typeof map != "object" )
+				return ModalWin;
+			// id
+			ModalWin.container.id	= (typeof map.id == "string")		? map.id	: false;
+			
+			// once
+			ModalWin.settings.once	= (typeof map.once == "boolean")	? map.once	: false;
+			
+			// html
+			ModalWin.container.html	= (typeof map.html == "string")		? map.html	: ModalWin.container.html;
+			
+			// top-space
+			if ( typeof map["top-space"] == "string" )
+				ModalWin.window["sep-top"][2] = ModalWin.window["sep-top"][2].replace( /:\d*.*;/, ":" + map["top-space"] + ";" );
+			
+			// bottom-space
+			if ( typeof map["bottom-space"] == "string" )
+				ModalWin.window["sep-down"][2] = ModalWin.window["sep-down"][2].replace( /:\d*.*;/, ":" + map["bottom-space"] + ";" );
+				
+			// shadow
+			if ( typeof map.shadow == "string" )
+				ModalWin.shadow.style.background	= map.shadow;
+			
+			// append
+			ModalWin.settings.ajax_append	= (typeof map.append == "boolean")	? map.append : ModalWin.settings.ajax_append;
+			
+			// close
+			ModalWin.settings.close_class	= (typeof map.close	== "string" )	? map.close	: ModalWin.settings.close_class;
+			
+			// url
+			ModalWin.settings.ajax_url		= (typeof map.url  == "string")		? map.url	: ModalWin.settings.ajax_url;
+			ModalWin.settings.ajax_url		= (typeof map.url  == "boolean")	? map.url	: ModalWin.settings.ajax_url;
+			
+			// load
+			ModalWin.settings.ajax_url		= (typeof map.load == "string")		? map.load	: ModalWin.settings.ajax_url;
+			ModalWin.settings.ajax_url		= (typeof map.load == "boolean")	? map.load	: ModalWin.settings.ajax_url;
+			
+			// ajax_method
+			ModalWin.settings.ajax_method	= (typeof map.ajax_method == "string") ? map.ajax_method : "GET";
+			
+			// ajax_data
+			ModalWin.settings.ajax_data		= (typeof map.ajax_data == "string")	? map.ajax_data  : ModalWin.settings.ajax_data;
+			ModalWin.settings.ajax_data		= (typeof map.ajax_data == "object")	? map.ajax_data  : ModalWin.settings.ajax_data;
+			ModalWin.settings.ajax_data		= (typeof map.ajax_data == "boolean")	? map.ajax_data  : ModalWin.settings.ajax_data;
+			
+			// html
+			ModalWin.container.html	= (typeof map.container == "string")			? map.container	 : ModalWin.container.html;
+			
+			/** container - object */
+				if ( typeof map.container == "object" ) {
+					var key,type,value,attr;
+					for ( key in map.container ) {
+						value= map.container[key];
+						type = typeof value;
+						if ( type == "object" ) {
+							for ( attr in value[key] )
+								ModalWin.container[key][attr]= value[attr];
+						}
+						else
+							ModalWin.container[key]			= value;
+					}
+				}
+			/**#- **/
+			
+			/** window - object*/
+				if ( typeof map.window == "object" ) {
+					var key,type,value,attr;
+					for ( key in map.window ) {
+						value= map.window[key];
+						type = typeof value;
+						if ( type == "object" ) {
+							for ( attr in value[key] )
+								ModalWin.window[key][attr]	= value[attr];
+						}
+						else
+							ModalWin.window[key]			= value;
+					}
+				}
+			/**#- **/
+						
+			/** shadow - object */
+				if ( typeof map.shadow == "object" ) {
+					var key,type,value,attr;
+					for ( key in map.shadow ) {
+						value= map.shadow[key];
+						type = typeof value;
+						if ( type == "object" ) {
+							for ( attr in value )
+								ModalWin.shadow[key][attr]		= value[attr];
+						}
+						else {
+							/** Мульти инструкции. */
+							switch( key ) {
+								case "opacity":
+										ModalWin.shadow.animate["on-style"]["opacity"]	= value;
+									break;
+								case "animate-opacity":
+										ModalWin.shadow.animate["off-style"]["opacity"]	= value;
+									break;
+								case "animate-show":
+										ModalWin.shadow.animate["speed-show"]			= value;
+									break;
+								case "animate-hide":
+										ModalWin.shadow.animate["speed-hide"]			= value;
+									break;
+								case "background":
+										ModalWin.shadow.style["background"]				= value;
+									break;
+								case "close":
+										ModalWin.settings.close_shadow	= ( typeof value == "boolean" ) ? value : ModalWin.settings.close_shadow;
+									break;
+								case "animateOn":
+										ModalWin.shadow.animateOn	= ( typeof value == "function" ) ? value : ModalWin.settings.close_shadow;
+									break;
+								case "animateOff":
+										ModalWin.shadow.animateOff	= ( typeof value == "function" ) ? value : ModalWin.settings.close_shadow;
+									break;
+								default:
+										ModalWin.shadow[key]				= map.shadow[key];
+									break;
+							}
+						}/* END else */
+					}/* END for */
+				}
+			/**#- **/
+			
+			/** close - object */
+				if ( typeof map.close == "object" ) {
+					//class
+					ModalWin.settings.close_class	= (typeof map.close["class"]=="string")   ? map.close["class"]  : ModalWin.settings.close_class;
+					//shadow
+					ModalWin.settings.close_shadow	= (typeof map.close["shadow"]=="boolean") ? map.close["shadow"] : ModalWin.settings.close_shadow;
+				}
+			/**#- **/
+			
+			/** load - object */
+				if ( typeof map.load == "object" ) {
+					// url
+					ModalWin.settings.ajax_url		= (typeof map.load.url  == "string")	? map.load.url	: ModalWin.settings.ajax_url;
+					ModalWin.settings.ajax_url		= (typeof map.load.url  == "boolean")	? map.load.url	: ModalWin.settings.ajax_url;
+					// ajax_method
+					ModalWin.settings.ajax_method	= (typeof map.load.method == "string")	? map.load.method : "GET";
+					// ajax_data
+					ModalWin.settings.ajax_data		= (typeof map.load.data == "string")	? map.load.data  : ModalWin.settings.ajax_data;
+					ModalWin.settings.ajax_data		= (typeof map.load.data == "object")	? map.load.data  : ModalWin.settings.ajax_data;
+					ModalWin.settings.ajax_data		= (typeof map.load.data == "boolean")	? map.load.data  : ModalWin.settings.ajax_data;
+					// append
+					ModalWin.settings.ajax_append	= (typeof map.load.append == "boolean")	? map.load.append : ModalWin.settings.ajax_append;
+				}
+			/**#- **/
+			
+			/** call - object */
+				if ( typeof map.call == "object" ) {
+					ModalWin.before	= ( typeof map.call.before	== "function" ) ? map.call.before	: ModalWin.before;
+					ModalWin.after	= ( typeof map.call.after	== "function" ) ? map.call.after	: ModalWin.after;
+					ModalWin.always	= ( typeof map.call.always	== "function" ) ? map.call.always	: ModalWin.always;
+					ModalWin.close	= ( typeof map.call.close	== "function" ) ? map.call.close	: ModalWin.close;
+				}
+			/**#- **/
+			return ModalWin;
 		};
 	
 	/** ############################################################# */
