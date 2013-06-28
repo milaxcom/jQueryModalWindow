@@ -39,7 +39,7 @@
 				ajax_append	: false,				// true - добавить контент; false - заменить.
 				ajax_cache	: false,				// false - браузер не будет кешировать производимый запрос.
 				
-				isLoad		: false,				// true - контент через AJAX загружен. (для использвания совместно с `once` )
+				isLoad		: false					// true - контент через AJAX загружен. (для использвания совместно с `once` )
 			},
 
 			// КЭШ
@@ -761,6 +761,3 @@
 	$.ModalWin_install	= ModalWin_install;
 	
 } )( jQuery );
-
-
-

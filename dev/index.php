@@ -1,4 +1,4 @@
-<?$s=split("/",$_SERVER["SCRIPT_NAME"] );$d="dev";$f=array_pop($s);define("__URL__","http://".$_SERVER["HTTP_HOST"].mb_ereg_replace("{$d}/{$f}","",$_SERVER["SCRIPT_NAME"]));unset($s,$d,$f);?>
+<?$s=mb_split("/",$_SERVER["SCRIPT_NAME"] );$d="dev";$f=array_pop($s);define("__URL__","http://".$_SERVER["HTTP_HOST"].mb_ereg_replace("{$d}/{$f}","",$_SERVER["SCRIPT_NAME"]));unset($s,$d,$f);?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 
@@ -6,8 +6,7 @@
 <title>jQuery Modal Window || LaoSun work place</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script type="text/javascript" src="<?=__URL__;?>lib/jquery-1.10.1.js"></script>
-<script type="text/javascript" src="<?=__URL__;?>dev/ModalWin-1.2.js"></script>
-<script type="text/javascript" src="<?=__URL__;?>dev/stuff/obj.DOM.js"></script>
+<script type="text/javascript" src="<?=__URL__;?>dev/jqmodalwin-1.2.js"></script>
 </head>
 <body style="height: 800px;">
 <style type="text/css">
