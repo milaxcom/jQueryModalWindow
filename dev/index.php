@@ -8,63 +8,7 @@
 <script type="text/javascript" src="<?=__URL__;?>lib/jquery-1.10.1.js"></script>
 <script type="text/javascript" src="<?=__URL__;?>dev/jqmodalwin-1.2.js"></script>
 </head>
-<body style="height: 800px;">
-<style type="text/css">
-.modal-win {
-	position:fixed;
-	top:0;
-	left:0;
-	width:100%;
-	height:100%;
-	text-align:center;
-	overflow:auto;
-	z-index:10003;
-	//position:absolute;
-	//top:expression((document.getElementsByTagName("body")[0].scrollTop) + 'px');
-}
-	
-.modal-win-container {
-	position:relative;
-	text-align:left;
-	margin:0 auto;
-	width:700px;
-	background-color:#fff;
-	z-index:5;
-	min-height: 16px;
-}
-	
-.modal-win-space-top {
-	position:relative;
-	width:100%;
-	height:50px;
-}
-	
-.modal-win-space-bottom {
-	position:relative;
-	width:100%;
-	height:40px;
-}
-	
-.modal-win-shadow {
-	position: fixed;
-	top:0;
-	left:0;
-	width:100%;
-	height:100%;
-	background-color:#000;
-	opacity:0.4;
-	z-index:10001;
-	//position:absolute;
-	//top:expression((document.getElementsByTagName("body")[0].scrollTop) + 'px');
-	filter: alpha(opacity = 40);
-}
-
-#example-window-1{background-color:#fbf9b9;}
-#example-window-1 p {padding:10px 60px; height: 900px;}
-#example-window-2{width:300px; background-color:#b9e1fb;}
-#example-window-2 p{padding:25px 30px;}
-</style>
-<div id="block"></div>
+<body>
 <?
 //require("temp.php");
 ?>
@@ -74,8 +18,8 @@
 		id				: "example-window-1",
 		html			: "sample html",
 		url				: "sample_html.php",
-		"top-space"		: "40px",
-		"bottom-space"	: "50px",
+		"top-space"		: "50px",
+		"bottom-space"	: "40px",
 		"shadow"		: {						
 			"opacity" 			: 0.3,		
 			"animate-opacity"	: 0,		

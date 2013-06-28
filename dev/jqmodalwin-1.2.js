@@ -93,13 +93,20 @@
 			"tag"		: "div",				// Название тэга
 			"class"		: "modal-win",			// Имя класса (без точки)
 			"style"		: {						// Список Стилей
+				"position"	: "fixed",
+				"top"		: "0",
+				"left"		: "0",
+				"width"		: "100%",
+				"height"	: "100%",
+				"text-align": "center",
+				"overflow"	: "auto"
 			},
 			"attr"		: {						// Список Аттрибутов
 			},
 			
 			// Верхний и нижний сепараторы array( "елемент", "класс", "стиль" )
-			"sep-top"		: [ "div", "modal-win-space-top", "height:20px;" ],
-			"sep-down"		: [ "div", "modal-win-space-bottom", "height:10px;"]
+			"sep-top"		: [ "div", "modal-win-space-top", "position:relative;width:100%;height:50px;" ],
+			"sep-down"		: [ "div", "modal-win-space-bottom", "position:relative;width:100%;height:40px;"]
 		},
 		
 		/** Контейнер для текста (карта элемента). */
@@ -109,6 +116,13 @@
 			"class"		: "modal-win-container",// Имя класса (без точки)
 			"html"		: "",					// Контент до загрузки AJAX.
 			"style"		: {						// Список Стилей
+				"position"	: "relative",
+				"text-align": "left",
+				"margin"	: "0 auto",
+				"width"		: "700px",
+				"background": "#fff",
+				"z-index"	: "5",
+				"min-height": "16px"
 			},
 			"attr"		: {						// Список Аттрибутов
 			}
@@ -119,6 +133,12 @@
 			"tag"		: "div",
 			"class"		: "modal-win-shadow",
 			"style"		: {								// Список Стилей
+				"position"	: "fixed",
+				"top"		: "0",
+				"left"		: "0",
+				"width"		: "100%",
+				"height"	: "100%",
+				"background": "#000"
 			},
 			"attr"		: {								// Список Аттрибутов
 				
@@ -606,11 +626,11 @@
 			
 			// top-space
 			if ( typeof map["top-space"] == "string" )
-				ModalWin.window["sep-top"][2] = ModalWin.window["sep-top"][2].replace( /:\d*.*;/, ":" + map["top-space"] + ";" );
+				ModalWin.window["sep-top"][2] = ModalWin.window["sep-top"][2].replace( /height:\d*.*;/, "height:" + map["top-space"] + ";" );
 			
 			// bottom-space
 			if ( typeof map["bottom-space"] == "string" )
-				ModalWin.window["sep-down"][2] = ModalWin.window["sep-down"][2].replace( /:\d*.*;/, ":" + map["bottom-space"] + ";" );
+				ModalWin.window["sep-down"][2] = ModalWin.window["sep-down"][2].replace( /height:\d*.*;/, "height:" + map["bottom-space"] + ";" );
 				
 			// shadow
 			if ( typeof map.shadow == "string" )
