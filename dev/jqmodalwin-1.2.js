@@ -602,6 +602,8 @@
 					ModalWin			= CORE.clone( CORE );
 					ModalWin			= ModalWin_install( map, ModalWin );
 					
+//					PP( map.container.style);
+					
 					CORE.init.call( ModalWin );
 				}
 				
@@ -668,7 +670,7 @@
 						value= map.container[key];
 						type = typeof value;
 						if ( type == "object" ) {
-							for ( attr in value[key] )
+							for ( attr in value )
 								ModalWin.container[key][attr]= value[attr];
 						}
 						else
@@ -684,7 +686,7 @@
 						value= map.window[key];
 						type = typeof value;
 						if ( type == "object" ) {
-							for ( attr in value[key] )
+							for ( attr in value )
 								ModalWin.window[key][attr]	= value[attr];
 						}
 						else

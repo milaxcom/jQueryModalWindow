@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script type="text/javascript" src="<?=__URL__;?>lib/jquery-1.10.1.js"></script>
 <script type="text/javascript" src="<?=__URL__;?>dev/jqmodalwin-1.2.js"></script>
+<script type="text/javascript" src="<?=__URL__;?>dev/stuff/obj.DOM.js"></script>
 </head>
 <body>
 <style>
@@ -31,6 +32,11 @@
 		url				: "sample_html.php",
 		"top-space"		: "50px",
 		"bottom-space"	: "40px",
+		"container"		: {
+			"style":{
+				"height": "1000px"
+			}
+		},
 		"shadow"		: {						
 			"opacity" 			: 0.3,		
 			"animate-opacity"	: 0,		
@@ -41,7 +47,7 @@
 		}
 	});
 	
-	$.ModalWin({});
+	//$.ModalWin({});
 	
 </script>
 </body>
