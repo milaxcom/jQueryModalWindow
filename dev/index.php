@@ -24,16 +24,39 @@
 //require("temp.php");
 ?>
 <script>
+	function openW() {
+		
+		$.ModalWin({
+			url				: "sample_html.php",
+			id				: "example-window-2",
+			"once"			: true,
+			"top-space"		: "50px",
+			"bottom-space"	: "40px",
+			"container"		: {
+				"style":{
+					"minHeight": "100px"
+				}
+			},
+			"shadow"		: {						
+				"opacity" 			: 0.3,		
+				"animate-opacity"	: 0,		
+				"animate-show"		: 500,		
+				"animate-hide"		: 500,		
+				"background" 		: "#999",	
+				"close"				: true
+			}
+		});
+	}
 
 	$.ModalWin({
 		id				: "example-window-1",
-		html			: "sample html",
-		url				: "sample_html.php",
-		"top-space"		: "50px",
+		html			: "<input type='button' value=' :: OPEN :: ' onclick='openW()'>",
+		/* url				: "sample_html.php", */
+		"top-space"		: "150px",
 		"bottom-space"	: "40px",
 		"container"		: {
 			"style":{
-				"height": "1000px"
+				"height": "100px"
 			}
 		},
 		"shadow"		: {						
@@ -41,7 +64,7 @@
 			"animate-opacity"	: 0,		
 			"animate-show"		: 500,		
 			"animate-hide"		: 500,		
-			"background" 		: "#F0F",	
+			"background" 		: "#999",	
 			"close"				: true
 		}
 	});

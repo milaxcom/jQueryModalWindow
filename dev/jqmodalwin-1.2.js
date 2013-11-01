@@ -179,15 +179,15 @@
 			"animateOff"			: function( animate ){
 				// Если нет объект массива с настройками, моментально запустить триггер удаления/скрытия окна.
 				if ( typeof animate != "object" || typeof animate["off-style"] != "object" )
-					return this.window/**/.trigger( "remove" );
+					return this.window/**/.trigger( "Remove" );
 
 				// Моментальная анимация. (запуск тригера удаления/скрытия окна).
 				if ( animate["speed-hide"] == 0 || typeof animate["speed-hide"] == "boolean" )
-					return	this.window/**/.trigger( "remove" );
+					return	this.window/**/.trigger( "Remove" );
 					
 				var $window	= this.window;
 				// Плавная анимация.
-				this.shadow/**/.animate( animate["off-style"], animate["speed-hide"], function(){ $window/**/.trigger( "remove" ); } );
+				this.shadow/**/.animate( animate["off-style"], animate["speed-hide"], function(){ $window/**/.trigger( "Remove" ); } );
 			}
 		},
 		
@@ -425,10 +425,9 @@
 					: function(){ $next_window.css( "overflow","auto" ); };
 			
 			// Обработчик удаления/скрытия.
-			$window/**/.on( "remove", {"shadow":$shadow}, remove);
+			$window/**/.on( "Remove", {"shadow":$shadow}, remove);
 			// Обработчик разблокировки
 			$window/**/.on( "unlock", body_unlock );
-			
 			
 			// Запуск анимации тени.
 			ModalWin.shadow.animateOff.call( $elements, ModalWin.shadow.animate )
