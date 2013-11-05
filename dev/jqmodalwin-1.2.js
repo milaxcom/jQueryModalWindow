@@ -39,7 +39,8 @@
 				ajax_append	: false,				// true - добавить контент; false - заменить.
 				ajax_cache	: false,				// false - браузер не будет кешировать производимый запрос.
 				
-				isLoad		: false					// true - контент через AJAX загружен. (для использвания совместно с `once` )
+				isLoad		: false,				// true - контент через AJAX загружен. (для использвания совместно с `once` )
+				CACHE_index	: 0						// Номер элемента в КЭШЕ.
 			},
 
 			// КЭШ
@@ -354,51 +355,46 @@
 		
 		/** ######################################### */
 		/** ############ Основные МЕТОДЫ ############ */
-		
 		/**
 		 * РЕВЕРСИВНЫЙ МЕТОД ВЫПОЛНЯЮЩИЙ УДАЛЕНИЕ/СКРЫТИЕ ОКНА.
 		 */
-		remove			: function() {
+		Remove			: function() {
 			var CACHE 		= [],
-				remove		= new Function(),
-				$next_window=false;
+				Remove		= new Function(),
+				$next_window= false;
 			/*
 			 * Создание индекса окон в порядке появления.
-			 * 
-			 * Последнее созданное окно в конце массива,
-			 * следовательно, массив надо перебирать с конца.
 			 */
-			for ( var i = (CORE.CACHE.length-1); i >= 0; i-- )
-			{
-				if ( typeof CORE.CACHE[i] != "object" ) continue;
-				CACHE.push( i );
-			}
+			for ( var i in CORE.CACHE )
+				if ( typeof CORE.CACHE[i] == "object" )
+					CACHE.push(i);
+			CACHE.reverse();
 			
 			/*
 			 * Удаление/скрытие первого активного окна (последнего из созданных).
 			 */
-			for ( var i = 0; i <= CACHE.length; i++ ) {
+			for ( var i in CACHE ) {
 				if ( CORE.CACHE[ CACHE[i] ][0].window.css( "display" ) != "none" ) {
-					// Выловим из массова нужные элементы.
+					// Выловим из массива нужные элементы.
 					var	$elements	= CORE.CACHE[ CACHE[i] ][0],
 						$window		= $elements.window,
 						$shadow		= $elements.shadow,
 						ModalWin	= CORE.CACHE[ CACHE[i] ][1];
 					
 							// once = true (скрыть)
-					if ( ModalWin.settings.once ) {
-						remove	= function( e ){
+					if ( ModalWin.settings.once) {
+						Remove	= function( e ){
 							// Опциональный close.
 							var close	= ModalWin.close.call( $elements, true );
 							if ( close === false )
 								return;
-								
+							
 							$( this ).hide();
 							e.data["shadow"].hide();
 							$( this ).trigger( "unlock" );
 						};
 					}else { // once = false (удалить)
-						remove	= function( e ){
+						Remove	= function( e ){
 							// Опциональный close.
 							var close	= ModalWin.close.call( $elements, false );
 							if ( close === false )
@@ -424,8 +420,10 @@
 					? function(){ $( ModalWin.$el.body ).css("overflow","auto"); }	//Разблокировка BODY
 					: function(){ $next_window.css( "overflow","auto" ); };
 			
+			if( typeof $window != "object" ) return;
+			
 			// Обработчик удаления/скрытия.
-			$window/**/.on( "Remove", {"shadow":$shadow}, remove);
+			$window/**/.on( "Remove", {"shadow":$shadow}, Remove);
 			// Обработчик разблокировки
 			$window/**/.on( "unlock", body_unlock );
 			
@@ -433,6 +431,33 @@
 			ModalWin.shadow.animateOff.call( $elements, ModalWin.shadow.animate )
 		},
 		
+		
+		/**
+		 * Удаление текущего окна (без анимации).
+		 **/
+		kill			: function(ModalWin) {
+			var index	= ModalWin.settings.CACHE_index;
+			if ( typeof CORE.CACHE[index] != "object" ) return;
+			var Map		= CORE.CACHE[index][0];
+				Map.window.remove();
+				Map.shadow.remove();
+			delete CORE.CACHE[index];
+		},
+		
+		
+		/**
+		 * Удаление всех окон (без анимации).
+		 **/
+		killAll			: function() {
+			var	i, index = [];
+			for ( i in CORE.CACHE )
+				if ( typeof CORE.CACHE[i] == "object" )
+					index.push(i);
+			index.reverse();
+			for ( var i in index )
+				CORE.CACHE[ index[i] ][0].window.trigger("kill");
+			CORE.CACHE	= new Array;
+		},
 		
 		
 		/**
@@ -446,9 +471,10 @@
 			/**#1
 			 * Создание экземпляров
 			 */
-				var ModalWin	= this;
-				var zIndex		= CORE.get_zIndex();
-				var $window		= this._$.create( this.window )/**/.hide()/**/.css( "zIndex", zIndex ),
+				var ModalWin	= this,
+					zIndex		= CORE.get_zIndex(),
+					CACHE_index	= CORE.CACHE.length,
+					$window		= this._$.create( this.window )/**/.hide()/**/.css( "zIndex", zIndex ),
 					$sep_top	= this._$.create({
 						"tag" 	: this.window["sep-top"][0],
 						"class" : this.window["sep-top"][1],
@@ -473,6 +499,9 @@
 					};
 			/**#1-*/
 			
+			/** Обновление в списке параметров номера элемента в КЭШЕ. */
+			this.settings.CACHE_index		= CACHE_index;
+			
 			/**
 			 * Расстановка экзеппляров по своим местам.
 			 */ 
@@ -480,17 +509,26 @@
 				$( this.$el["body"] )/**/.prepend( $shadow )/**/.prepend( $window );
 				
 				// Добавляем в КЭШ, для удобства управления.
-				CORE.CACHE[ CORE.CACHE.length ]	= Array( $elements, this );
+				CORE.CACHE[ CACHE_index ]	= Array( $elements, this );
 			/**#@-*/
 			
 			/**#2
 			 * Установка обработчиков
 			 */
 				// Закрытие окна.
-				$shadow./**/on( "close", function( e ){	$window.trigger( "close" );		});
+				$shadow./**/on( "close", function(){	$window.trigger( "close" );						});
 
 				// Закрытие окна.
-				$window./**/on( "close", function( e ){	CORE.remove();					});
+				$window./**/on( "close", function(){	CORE.Remove();									});
+				
+				// Удалить окно, несмотря на once = true;
+				$window./**/on( "kill", function(){		CORE.kill( ModalWin );							});
+				
+				// Позволяет обновить контент.
+				$window./**/on( "reload", function(){
+					ModalWin.settings.isLoad	= false;
+					ModalWin.ajax.init.call( $elements, ModalWin );
+				});
 				
 				// Обработчик отлавливающий клик вне контэйнера для текста.
 				if ( this.settings.close_shadow == true )
@@ -570,17 +608,18 @@
 				if ( typeof map	== "object" && typeof map.id == "string" )
 				{
 					var $elements,
-						i			= 0,
 						ID			= map.id.replace( /^#{1}/, "" );
 					// Просмотр КЭША.
-					for( i; i < CORE.CACHE.length; i++ ) {
+					for( var i in CORE.CACHE ) {
 						if ( typeof CORE.CACHE[i] == "object" && CORE.CACHE[i][0].container.attr( "id" ) == ID ) {
-							from_CACHE	= true;
-							$elements	= CORE.CACHE[i][0];
-							ModalWin	= CORE.CACHE[i][1];
+							from_CACHE								= true;
+							CACHE_index								= CORE.CACHE.length;
+							CORE.CACHE[i][1].settings.CACHE_index	= CACHE_index;	
+							$elements								= CORE.CACHE[i][0];
+							ModalWin								= CORE.CACHE[i][1];
 							
 							// Переместим этот КЭШ наверх.
-							CORE.CACHE[ CORE.CACHE.length ]	= Array( $elements, ModalWin );
+							CORE.CACHE[ CACHE_index ]	= Array( $elements, ModalWin );
 							// Удалим уровень, с которого был перемещен КЭШ.
 							delete CORE.CACHE[i];
 							break;
@@ -595,18 +634,14 @@
 			 */
 				if ( from_CACHE ) {
 					CORE.re_init.call( ModalWin, $elements );
-					return;
 				} else {
 					// Создаем клон ядра для будущего окна.
 					ModalWin			= CORE.clone( CORE );
 					ModalWin			= ModalWin_install( map, ModalWin );
-					
-//					PP( map.container.style);
-					
 					CORE.init.call( ModalWin );
 				}
-				
 			/**#2-*/
+			return ModalWin;
 		};
 	
 	
@@ -762,6 +797,8 @@
 					ModalWin.settings.ajax_data		= (typeof map.load.data == "boolean")	? map.load.data  : ModalWin.settings.ajax_data;
 					// append
 					ModalWin.settings.ajax_append	= (typeof map.load.append == "boolean")	? map.load.append : ModalWin.settings.ajax_append;
+					// ajax_cache
+					ModalWin.settings.ajax_cache	= (typeof map.load.ajax_cache == "boolean")	? map.load.ajax_cache : ModalWin.settings.ajax_append;
 				}
 			/**#- **/
 			
@@ -780,5 +817,6 @@
 	$.ModalWin			= ModalWin;
 	$.ModalWin_CORE		= CORE;
 	$.ModalWin_install	= ModalWin_install;
+	$.ModalWin_KillAll	= CORE.killAll;
 	
 } )( jQuery );
